@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F4F8"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- TÍTULO DE LA APLICACIÓN -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Monitoreo IoT - Arduino"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#1A202C"
+            android:gravity="center"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvModoConexion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Modo actual: Simulación Local (Fase 1)"
+            android:textSize="14sp"
+            android:textColor="#718096"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- ========================================== -->
+        <!-- PANEL 1: MONITOREO EN TIEMPO REAL          -->
+        <!-- ========================================== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="20dp"
+            android:elevation="4dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LECTURA DE SENSORES"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#A0AEC0"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Estado de la Puerta -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sensor de Puerta:"
+                android:textSize="16sp"
+                android:textColor="#4A5568" />
+
+            <TextView
+                android:id="@+id/tvEstadoPuerta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estado de Puerta: CERRADA"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#2E7D32"
+                android:paddingVertical="8dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Línea divisoria -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E2E8F0"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Temperatura Interior -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sensor de Temperatura Interior:"
+                android:textSize="16sp"
+                android:textColor="#4A5568" />
+
+            <TextView
+                android:id="@+id/tvTemperatura"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Temperatura Interior: 22.5 °C"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#1E88E5"
+                android:paddingVertical="8dp" />
+
+        </LinearLayout>
+
+        <!-- ========================================== -->
+        <!-- PANEL 2: CONTROLES DE SIMULACIÓN (MOCK)    -->
+        <!-- ========================================== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#E2E8F0"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PANEL DE PRUEBA (SIMULADOR DE SENSORES)"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#4A5568"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Botón para alternar puerta -->
+            <Button
+                android:id="@+id/btnSimularPuerta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Simular Abrir / Cerrar Puerta"
+                android:backgroundTint="#2D3748"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ajustar Temperatura Simulada:"
+                android:textSize="14sp"
+                android:textColor="#4A5568"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Botones para subir y bajar temperatura -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <Button
+                    android:id="@+id/btnBajarTemp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="- 0.5 °C"
+                    android:backgroundTint="#3182CE"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/btnSubirTemp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+ 0.5 °C"
+                    android:backgroundTint="#E53E3E"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Botón para simular lectura aleatoria -->
+            <Button
+                android:id="@+id/btnSimularTempAleatoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Simular Cambio de Temperatura Aleatorio"
+                android:backgroundTint="#4A5568"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
