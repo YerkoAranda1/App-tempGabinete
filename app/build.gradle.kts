@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -41,4 +42,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    // Implementación del Bill of Materials (BoM) de Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    // Librería específica para Realtime Database
+    implementation("com.google.firebase:firebase-database")
 }
+
+
+

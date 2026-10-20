@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "298985124584",
+    "project_id": "gabineteiot",
+    "storage_bucket": "gabineteiot.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298985124584:android:05d902427de9ae34544f5d",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOeZCFe5Vsy3T0GarJAJzw5J3Lw9Ja5eE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

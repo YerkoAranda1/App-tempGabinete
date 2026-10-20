@@ -1,126 +1,73 @@
-// IMPORTANTE: Mantén aquí arriba tu línea original "package com.example.monitoreoiot"
+package com.example.myapplication
 
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.util.Locale
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlin.random.Random
 
-/**
- * 1. MODELO DE DATOS
- * Representa el paquete de información que entrega el sistema de sensores.
- */
-data class DatosSensores(
-    val puertaAbierta: Boolean,
-    val temperaturaGrados: Double
-)
-
-/**
- * 2. MÓDULO PROVEEDOR DE DATOS (CAPA AISLADA)
- * En esta Fase 1, almacena y simula los valores en la memoria del teléfono.
- * En la Fase 2, solo modificaremos esta clase para hacer la petición HTTP/JSON
- * al Arduino Uno WiFi sin tener que cambiar la interfaz gráfica.
- */
-class ProveedorDatosIoT {
-
-    // Estado inicial simulado: Puerta cerrada (false) y 22.5 °C
-    private var estadoPuertaAbierta: Boolean = false
-    private var temperaturaActual: Double = 22.5
-
-    // Función principal que consulta la interfaz para obtener la lectura actual
-    fun obtenerLecturaActual(): DatosSensores {
-        return DatosSensores(
-            puertaAbierta = estadoPuertaAbierta,
-            temperaturaGrados = temperaturaActual
-        )
-    }
-
-    // --- Funciones exclusivas de simulación (Fase 1) ---
-
-    fun simularCambioPuerta() {
-        estadoPuertaAbierta = !estadoPuertaAbierta
-    }
-
-    fun simularVariacionTemperatura(delta: Double) {
-        temperaturaActual += delta
-    }
-
-    fun simularTemperaturaAleatoria() {
-        // Genera una temperatura realista entre 18.0 °C y 30.0 °C
-        temperaturaActual = Random.nextDouble(18.0, 30.0)
-    }
-}
-
-/**
- * 3. ACTIVIDAD PRINCIPAL (INTERFAZ DE USUARIO)
- * Se encarga únicamente de mostrar en pantalla lo que entrega ProveedorDatosIoT.
- */
 class MainActivity : AppCompatActivity() {
 
-    // Instancia de nuestro módulo de datos
-    private val proveedorIoT = ProveedorDatosIoT()
-
-    // Referencias a los textos de la pantalla
-    private lateinit var tvEstadoPuerta: TextView
-    private lateinit var tvTemperatura: TextView
+    // Variables locales para simular los sensores
+    private var isPuertaAbierta = false
+    private var temperaturaActual = 22.5
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1. Vincular variables con los componentes visuales del XML
-        tvEstadoPuerta = findViewById(R.id.tvEstadoPuerta)
-        tvTemperatura = findViewById(R.id.tvTemperatura)
+        // 1. Inicializar Firebase y crear dos rutas en la base de datos
+        val database = FirebaseDatabase.getInstance()
+        val refPuerta = database.getReference("gabinete/puerta")
+        val refTemperatura = database.getReference("gabinete/temperatura")
 
-        val btnSimularPuerta: Button = findViewById(R.id.btnSimularPuerta)
-        val btnBajarTemp: Button = findViewById(R.id.btnBajarTemp)
-        val btnSubirTemp: Button = findViewById(R.id.btnSubirTemp)
-        val btnSimularTempAleatoria: Button = findViewById(R.id.btnSimularTempAleatoria)
+        // 2. Vincular los elementos visuales de tu XML con Kotlin usando los IDs reales
+        val tvEstadoPuerta = findViewById<TextView>(R.id.tvEstadoPuerta)
+        val tvTemperatura = findViewById<TextView>(R.id.tvTemperatura)
+        val btnSimularPuerta = findViewById<Button>(R.id.btnSimularPuerta)
+        val btnBajarTemp = findViewById<Button>(R.id.btnBajarTemp)
+        val btnSubirTemp = findViewById<Button>(R.id.btnSubirTemp)
+        val btnSimularTempAleatoria = findViewById<Button>(R.id.btnSimularTempAleatoria)
 
-        // 2. Mostrar los valores iniciales al abrir la app
-        actualizarPantalla()
+        // Enviar el estado inicial a Firebase al abrir la app
+        refPuerta.setValue("CERRADA")
+        refTemperatura.setValue(temperaturaActual)
 
-        // 3. Configurar eventos de los botones de simulación
+        // 3. Lógica para el botón de la Puerta
         btnSimularPuerta.setOnClickListener {
-            proveedorIoT.simularCambioPuerta()
-            actualizarPantalla()
+            isPuertaAbierta = !isPuertaAbierta
+            val nuevoEstado = if (isPuertaAbierta) "ABIERTA" else "CERRADA"
+
+            // Actualiza el texto en la pantalla del celular
+            tvEstadoPuerta.text = "Estado de Puerta: $nuevoEstado"
+
+            // Envía el nuevo estado a la base de datos
+            refPuerta.setValue(nuevoEstado)
         }
 
+        // 4. Lógica para los botones de Temperatura
         btnBajarTemp.setOnClickListener {
-            proveedorIoT.simularVariacionTemperatura(-0.5)
-            actualizarPantalla()
+            temperaturaActual -= 0.5
+            actualizarTemperatura(tvTemperatura, refTemperatura)
         }
 
         btnSubirTemp.setOnClickListener {
-            proveedorIoT.simularVariacionTemperatura(0.5)
-            actualizarPantalla()
+            temperaturaActual += 0.5
+            actualizarTemperatura(tvTemperatura, refTemperatura)
         }
 
         btnSimularTempAleatoria.setOnClickListener {
-            proveedorIoT.simularTemperaturaAleatoria()
-            actualizarPantalla()
+            // Genera un número aleatorio entre 15.0 y 35.0 y lo redondea a 1 decimal
+            temperaturaActual = Math.round(Random.nextDouble(15.0, 35.0) * 10.0) / 10.0
+            actualizarTemperatura(tvTemperatura, refTemperatura)
         }
     }
 
-    /**
-     * Consulta los datos al módulo proveedor y refresca los colores y textos en pantalla.
-     */
-    private fun actualizarPantalla() {
-        val datos = proveedorIoT.obtenerLecturaActual()
-
-        // Actualizar visualmente el estado de la puerta
-        if (datos.puertaAbierta) {
-            tvEstadoPuerta.text = "Estado de Puerta: ABIERTA"
-            tvEstadoPuerta.setTextColor(Color.parseColor("#C62828")) // Rojo alerta
-        } else {
-            tvEstadoPuerta.text = "Estado de Puerta: CERRADA"
-            tvEstadoPuerta.setTextColor(Color.parseColor("#2E7D32")) // Verde seguro
-        }
-
-        // Formatear temperatura a 1 decimal (ej. 22.5 °C) y mostrar en pantalla
-        val tempFormateada = String.format(Locale.US, "%.1f", datos.temperaturaGrados)
-        tvTemperatura.text = "Temperatura Interior: $tempFormateada °C"
+    // Función auxiliar para no repetir código de temperatura
+    private fun actualizarTemperatura(tv: TextView, ref: DatabaseReference) {
+        tv.text = "Temperatura Interior: $temperaturaActual °C"
+        ref.setValue(temperaturaActual)
     }
 }
