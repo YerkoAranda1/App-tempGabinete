@@ -175,5 +175,15 @@
 
         </LinearLayout>
 
+        <!-- Pega este botón justo debajo del botón de temperatura aleatoria que ya tienes -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar Sesión"
+            android:backgroundTint="#E53E3E"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="24dp"
+            android:textStyle="bold" />
     </LinearLayout>
 </ScrollView>
